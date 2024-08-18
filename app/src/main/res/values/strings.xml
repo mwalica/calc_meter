@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">calc_meter</string>
+    <string name="btn_save">Save</string>
 </resources>
