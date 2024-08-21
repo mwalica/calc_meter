@@ -4,18 +4,24 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.walica.calc_meter.MyApp
 import ch.walica.calc_meter.domain.prefsmanager.PrefsManager
+import ch.walica.calc_meter.domain.usecase.GetPrefsUseCase
+import ch.walica.calc_meter.domain.usecase.SavePrefsUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SettingsViewModel(
-    private val prefsManager: PrefsManager = MyApp.appModule.prefsManager
+@HiltViewModel
+class SettingsViewModel @Inject constructor(
+    private val getPrefsUseCase: GetPrefsUseCase,
+    private val savePrefsUseCase: SavePrefsUseCase
 ) : ViewModel() {
 
-    private val _startReading = prefsManager.getPrefs().stateIn(
+    private val _startReading = getPrefsUseCase().stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = 0
@@ -41,7 +47,7 @@ class SettingsViewModel(
 
             SettingsEvent.SaveStartReading -> {
                 viewModelScope.launch {
-                    prefsManager.savePrefs(startReading = _state.value.enteredNumber.toInt())
+                    savePrefsUseCase(startReading = _state.value.enteredNumber.toInt())
                 }
                 _state.update {
                     it.copy(

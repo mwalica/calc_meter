@@ -1,16 +1,7 @@
 package ch.walica.calc_meter
 
 import android.app.Application
-import ch.walica.calc_meter.common.AppModule
-import ch.walica.calc_meter.common.AppModuleImpl
+import dagger.hilt.android.HiltAndroidApp
 
-class MyApp : Application() {
-    companion object {
-        lateinit var appModule: AppModule
-    }
-
-    override fun onCreate() {
-        super.onCreate()
-        appModule = AppModuleImpl(this)
-    }
-}
+@HiltAndroidApp
+class MyApp : Application()

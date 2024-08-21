@@ -9,11 +9,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import ch.walica.calc_meter.R
 
 @Composable
-fun SettingsScreen(settingsViewModel: SettingsViewModel = viewModel()) {
+fun SettingsScreen(settingsViewModel: SettingsViewModel = hiltViewModel()) {
 
     val settingsState = settingsViewModel.state.collectAsState(SettingsState()).value
 

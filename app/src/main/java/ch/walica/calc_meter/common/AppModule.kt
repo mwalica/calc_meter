@@ -9,21 +9,29 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import ch.walica.calc_meter.data.prefsmanager.PrefsManagerImpl
 import ch.walica.calc_meter.domain.prefsmanager.PrefsManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
-interface AppModule {
-    val dataStore: DataStore<Preferences>
-    val prefsManager: PrefsManager
-}
-
-class AppModuleImpl(private val context: Context) : AppModule {
-    override val dataStore: DataStore<Preferences>
-        get() = PreferenceDataStoreFactory.create(
+@InstallIn(SingletonComponent::class)
+@Module
+class AppModule {
+    @Singleton
+    @Provides
+    fun provideDataStore(@ApplicationContext context: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(
             corruptionHandler = ReplaceFileCorruptionHandler(
                 produceNewData = { emptyPreferences() }
             ),
-            produceFile = { context.preferencesDataStoreFile("apps_prefs") }
+            produceFile = { context.preferencesDataStoreFile("app_prefs") }
         )
-    override val prefsManager: PrefsManager
-        get() = PrefsManagerImpl(dataStore)
+    }
 
+    @Provides
+    fun providePrefsManager(dataStore: DataStore<Preferences>): PrefsManager =
+        PrefsManagerImpl(dataStore)
 }
+
