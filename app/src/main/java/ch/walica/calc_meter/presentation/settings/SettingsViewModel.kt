@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ch.walica.calc_meter.MyApp
 import ch.walica.calc_meter.domain.prefsmanager.PrefsManager
+import ch.walica.calc_meter.domain.usecase.ClearPrefsUseCase
 import ch.walica.calc_meter.domain.usecase.GetPrefsUseCase
 import ch.walica.calc_meter.domain.usecase.SavePrefsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val getPrefsUseCase: GetPrefsUseCase,
-    private val savePrefsUseCase: SavePrefsUseCase
+    getPrefsUseCase: GetPrefsUseCase,
+    private val savePrefsUseCase: SavePrefsUseCase,
+    private val clearPrefsUseCase: ClearPrefsUseCase
 ) : ViewModel() {
 
     private val _startReading = getPrefsUseCase().stateIn(
@@ -46,13 +48,34 @@ class SettingsViewModel @Inject constructor(
             }
 
             SettingsEvent.SaveStartReading -> {
+                if (_state.value.enteredNumber.isBlank()) {
+                    _state.update {
+                        it.copy(
+                            error = "Please enter value"
+                        )
+                    }
+                    return
+                }
                 viewModelScope.launch {
                     savePrefsUseCase(startReading = _state.value.enteredNumber.toInt())
                 }
                 _state.update {
                     it.copy(
                         enteredNumber = "",
-                        startReading = _state.value.startReading
+                        startReading = _state.value.startReading,
+                        error = null
+                    )
+                }
+            }
+
+            SettingsEvent.ClearStartReading -> {
+                viewModelScope.launch {
+                    clearPrefsUseCase()
+                }
+
+                _state.update {
+                    it.copy(
+                        startReading = null
                     )
                 }
             }
@@ -63,10 +86,12 @@ class SettingsViewModel @Inject constructor(
 
 data class SettingsState(
     val enteredNumber: String = "",
-    val startReading: Int? = null
+    val startReading: Int? = null,
+    val error: String? = null
 )
 
 sealed interface SettingsEvent {
     data object SaveStartReading : SettingsEvent
+    data object ClearStartReading : SettingsEvent
     data class EnteredNumberChange(val enteredText: String) : SettingsEvent
 }

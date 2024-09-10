@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val getPrefsUseCase: GetPrefsUseCase) :
+class HomeViewModel @Inject constructor(getPrefsUseCase: GetPrefsUseCase) :
     ViewModel() {
 
     private val _startReading = getPrefsUseCase().stateIn(
@@ -41,11 +41,20 @@ class HomeViewModel @Inject constructor(private val getPrefsUseCase: GetPrefsUse
             }
 
             is HomeEvent.CalcIncrease -> {
+                if (_state.value.enteredNumber.isBlank()) {
+                    _state.update {
+                        it.copy(
+                            error = "Pleas enter current value"
+                        )
+                    }
+                    return
+                }
                 val result = _state.value.enteredNumber.toInt() - _startReading.value
-                Log.d("my_log", "Result: $result")
                 _state.update {
                     it.copy(
-                        result = result
+                        result = result,
+                        enteredNumber = "",
+                        error = null
                     )
                 }
             }
@@ -57,7 +66,8 @@ class HomeViewModel @Inject constructor(private val getPrefsUseCase: GetPrefsUse
 data class HomeState(
     val enteredNumber: String = "",
     val startReading: Int = 0,
-    val result: Int? = 0
+    val result: Int? = null,
+    val error: String? = null
 )
 
 sealed interface HomeEvent {
