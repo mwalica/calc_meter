@@ -1,5 +1,6 @@
 package ch.walica.calc_meter.presentation.main
 
+import android.app.Activity
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -48,6 +50,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
         navBackStackEntry.destination.route?.substringAfterLast(".")
     }.collectAsState(initial = "Home").value
 
+    val activity = LocalContext.current as Activity
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -64,6 +68,14 @@ fun MainScreen(modifier: Modifier = Modifier) {
                                 contentDescription = "settings"
                             )
                         }
+                    }
+
+                    IconButton(onClick = {
+                        activity.finish()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Rounded.ExitToApp,
+                            contentDescription = "Close App")
                     }
 
                 },

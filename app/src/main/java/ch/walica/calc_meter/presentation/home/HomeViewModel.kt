@@ -40,7 +40,7 @@ class HomeViewModel @Inject constructor(getPrefsUseCase: GetPrefsUseCase) :
                 }
             }
 
-            is HomeEvent.CalcIncrease -> {
+            HomeEvent.CalcIncrease -> {
                 if (_state.value.enteredNumber.isBlank()) {
                     _state.update {
                         it.copy(
@@ -55,6 +55,14 @@ class HomeViewModel @Inject constructor(getPrefsUseCase: GetPrefsUseCase) :
                         result = result,
                         enteredNumber = "",
                         error = null
+                    )
+                }
+            }
+
+            HomeEvent.ClearResult -> {
+                _state.update {
+                    it.copy(
+                        result = null
                     )
                 }
             }
@@ -73,4 +81,5 @@ data class HomeState(
 sealed interface HomeEvent {
     data class EnteredNumberChange(val enteredText: String) : HomeEvent
     data object CalcIncrease : HomeEvent
+    data object ClearResult : HomeEvent
 }
