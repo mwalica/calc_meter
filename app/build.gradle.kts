@@ -70,6 +70,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    implementation(libs.androidx.material.icons.extended.android)
+
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.datastore.preferences.android)
     implementation(libs.kotlinx.serialization.json)
@@ -77,4 +79,6 @@ dependencies {
     implementation(libs.hilt)
     implementation(libs.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
+
+    implementation(libs.text.recognition)
 }

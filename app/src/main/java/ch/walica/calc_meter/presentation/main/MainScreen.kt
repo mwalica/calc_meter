@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
+import androidx.compose.material.icons.automirrored.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ExitToApp
 import androidx.compose.material.icons.rounded.Settings
@@ -17,6 +19,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -57,7 +60,10 @@ fun MainScreen(modifier: Modifier = Modifier) {
         topBar = {
             TopAppBar(
                 windowInsets = WindowInsets(top = 0.dp),
-                title = { Text(text = "Increase calculator ${currentRoute}") },
+                title = { Text(
+                    text = "Increase calculator $currentRoute",
+                    color = MaterialTheme.colorScheme.primary
+                    ) },
                 actions = {
                     if (currentRoute == "Home") {
                         IconButton(onClick = {
@@ -65,7 +71,8 @@ fun MainScreen(modifier: Modifier = Modifier) {
                         }) {
                             Icon(
                                 imageVector = Icons.Rounded.Settings,
-                                contentDescription = "settings"
+                                contentDescription = "settings",
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
@@ -74,8 +81,10 @@ fun MainScreen(modifier: Modifier = Modifier) {
                         activity.finish()
                     }) {
                         Icon(
-                            imageVector = Icons.Rounded.ExitToApp,
-                            contentDescription = "Close App")
+                            imageVector = Icons.AutoMirrored.Rounded.ExitToApp,
+                            contentDescription = "Close App",
+                            tint = MaterialTheme.colorScheme.primary
+                            )
                     }
 
                 },
@@ -83,8 +92,9 @@ fun MainScreen(modifier: Modifier = Modifier) {
                     if (currentRoute == "Settings") {
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
-                                imageVector = Icons.Rounded.ArrowBack,
-                                contentDescription = "arrow back"
+                                imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+                                contentDescription = "arrow back",
+                                tint = MaterialTheme.colorScheme.primary
                             )
                         }
                     }
